@@ -97,7 +97,9 @@ export async function fixture(): Promise<{
   reports: string[];
   dirty: Set<string>;
 }> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'rsw-test-'));
+  const root = await fs.mkdtemp(
+    path.join(await fs.realpath(os.tmpdir()), 'rsw-test-'),
+  );
   const local = path.join(root, 'local');
   const remoteDir = path.join(root, 'remote');
   await fs.mkdir(remoteDir);

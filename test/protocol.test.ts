@@ -68,7 +68,9 @@ describe('real loopback protocol integrations (no user servers)', () => {
     }
   }
   it('FTP connects, transfers binary, lists, renames, deletes and rejects bad credentials', async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'rsw-ftp-'));
+    const root = await fs.mkdtemp(
+      path.join(await fs.realpath(os.tmpdir()), 'rsw-ftp-'),
+    );
     await fs.mkdir(path.join(root, 'site'));
     const port = await freePort();
     const server = new FtpServer({
@@ -100,7 +102,9 @@ describe('real loopback protocol integrations (no user servers)', () => {
     }
   });
   it('FTPS fails closed on untrusted TLS certificates', async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'rsw-ftps-'));
+    const root = await fs.mkdtemp(
+      path.join(await fs.realpath(os.tmpdir()), 'rsw-ftps-'),
+    );
     await fs.mkdir(path.join(root, 'site'));
     const key = path.resolve('test/fixtures/test-key.pem'),
       cert = path.resolve('test/fixtures/test-cert.pem');
@@ -132,7 +136,9 @@ describe('real loopback protocol integrations (no user servers)', () => {
     }
   });
   it('SFTP verifies host keys, transfers binary and rejects mismatches / bad credentials', async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'rsw-sftp-'));
+    const root = await fs.mkdtemp(
+      path.join(await fs.realpath(os.tmpdir()), 'rsw-sftp-'),
+    );
     await fs.mkdir(path.join(root, 'site'));
     const server = await sftpServer(root);
     const c = {
@@ -159,7 +165,9 @@ describe('real loopback protocol integrations (no user servers)', () => {
     }
   });
   it('full FTP SyncEngine publishes saved local content and detects remote conflict', async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'rsw-ftp-engine-'));
+    const root = await fs.mkdtemp(
+      path.join(await fs.realpath(os.tmpdir()), 'rsw-ftp-engine-'),
+    );
     await fs.mkdir(path.join(root, 'site'));
     await fs.writeFile(path.join(root, 'site/index.php'), '<?php echo 1;');
     const port = await freePort();
