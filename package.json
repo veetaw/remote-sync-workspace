@@ -1,0 +1,529 @@
+{
+  "name": "remote-sync-workspace",
+  "version": "0.1.2",
+  "description": "Persistent local FTP, FTPS and SFTP workspaces with verified synchronization and recoverable history.",
+  "main": "./dist/extension.js",
+  "scripts": {
+    "build": "tsc --noEmit && node scripts/build.cjs",
+    "test": "vitest run",
+    "test:extension": "npm run build && node scripts/test-extension.cjs",
+    "test:php": "npm run build && node scripts/test-extension.cjs --php",
+    "test:vsix": "node scripts/test-extension.cjs --vsix",
+    "lint": "eslint src test",
+    "format": "prettier --write src test docs *.md *.json",
+    "check": "npm run build && npm run lint && npm test",
+    "package": "vsce package --no-dependencies",
+    "vscode:prepublish": "npm run build && node scripts/notices.cjs"
+  },
+  "keywords": [
+    "ftp",
+    "ftps",
+    "sftp",
+    "sync",
+    "remote",
+    "workspace"
+  ],
+  "author": "veetaw",
+  "license": "MIT",
+  "dependencies": {
+    "basic-ftp": "^6.2.6",
+    "chokidar": "^4.0.3",
+    "minimatch": "^11.0.9",
+    "ssh2-sftp-client": "^12.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.5",
+    "@types/ssh2": "^1.15.6",
+    "@types/ssh2-sftp-client": "^9.0.6",
+    "@types/vscode": "^1.100.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.1.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.15.0",
+    "ftp-srv": "^4.6.3",
+    "prettier": "^3.10.1",
+    "ssh2": "^1.17.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^5.1.1"
+  },
+  "displayName": "Remote Sync Workspace",
+  "publisher": "remote-sync-local",
+  "engines": {
+    "vscode": "^1.110.0",
+    "node": ">=22"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "Remote synchronization executes Git and publishes local files."
+    },
+    "virtualWorkspaces": false
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "remoteSync.add",
+        "title": "Remote Sync: Add Connection",
+        "icon": "$(add)"
+      },
+      {
+        "command": "remoteSync.connections",
+        "title": "Remote Sync: Manage Connections",
+        "icon": "$(server)"
+      },
+      {
+        "command": "remoteSync.refreshConnections",
+        "title": "Remote Sync: Refresh Connections View",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "remoteSync.edit",
+        "title": "Remote Sync: Edit Connection",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "remoteSync.remove",
+        "title": "Remote Sync: Delete Connection",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "remoteSync.open",
+        "title": "Remote Sync: Connect / Open Workspace",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "remoteSync.test",
+        "title": "Remote Sync: Test Connection",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "remoteSync.sync",
+        "title": "Remote Sync: Sync Now",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "remoteSync.pause",
+        "title": "Remote Sync: Pause / Resume Upload",
+        "icon": "$(debug-pause)"
+      },
+      {
+        "command": "remoteSync.download",
+        "title": "Remote Sync: Download Directory / Refresh Directory"
+      },
+      {
+        "command": "remoteSync.recursive",
+        "title": "Remote Sync: Download Recursively"
+      },
+      {
+        "command": "remoteSync.entire",
+        "title": "Remote Sync: Download Entire Project for Indexing"
+      },
+      {
+        "command": "remoteSync.operations",
+        "title": "Remote Sync: Operations and Diagnostics"
+      },
+      {
+        "command": "remoteSync.recover",
+        "title": "Remote Sync: Recover / Abandon Blocked Operation"
+      },
+      {
+        "command": "remoteSync.retry",
+        "title": "Remote Sync: Retry Failed Operations"
+      },
+      {
+        "command": "remoteSync.resolve",
+        "title": "Remote Sync: Resolve Conflict"
+      },
+      {
+        "command": "remoteSync.compare",
+        "title": "Remote Sync: Compare Local and Remote"
+      },
+      {
+        "command": "remoteSync.merge",
+        "title": "Remote Sync: Open Three Way Merge"
+      },
+      {
+        "command": "remoteSync.history",
+        "title": "Remote Sync: View History / Restore Version"
+      },
+      {
+        "command": "remoteSync.settings",
+        "title": "Remote Sync: Connection Settings",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "remoteSync.logs",
+        "title": "Remote Sync: Show Log",
+        "icon": "$(output)"
+      },
+      {
+        "command": "remoteSync.splitPhpHtml",
+        "title": "Remote Sync: Split PHP / HTML in the Same File",
+        "icon": "$(layout-sidebar-right)"
+      },
+      {
+        "command": "remoteSync.checkActiveFile",
+        "title": "Remote Sync: Check Current File Against Server (Read Only)",
+        "icon": "$(circle-outline)"
+      },
+      {
+        "command": "remoteSync.openInBrowser",
+        "title": "Remote Sync: Open Published File in Browser",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "remoteSync.browserSettings",
+        "title": "Remote Sync: Configure Website URL / Web Root",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "remoteSync.fileStatus.synced",
+        "title": "Remote Sync: Allineato all’ultimo controllo — clic per ricontrollare",
+        "icon": "$(circle-filled)"
+      },
+      {
+        "command": "remoteSync.fileStatus.local",
+        "title": "Remote Sync: Modifiche locali — clic per ricontrollare",
+        "icon": "$(circle-filled)"
+      },
+      {
+        "command": "remoteSync.fileStatus.remote",
+        "title": "Remote Sync: Modifiche sul server — clic per ricontrollare",
+        "icon": "$(circle-filled)"
+      },
+      {
+        "command": "remoteSync.fileStatus.conflict",
+        "title": "Remote Sync: Locale e server divergenti — clic per ricontrollare",
+        "icon": "$(warning)"
+      },
+      {
+        "command": "remoteSync.fileStatus.different",
+        "title": "Remote Sync: Locale e server differenti — clic per ricontrollare",
+        "icon": "$(circle-filled)"
+      },
+      {
+        "command": "remoteSync.fileStatus.checking",
+        "title": "Remote Sync: Controllo server in corso — clic per ricontrollare",
+        "icon": "$(sync~spin)"
+      },
+      {
+        "command": "remoteSync.fileStatus.unknown",
+        "title": "Remote Sync: Server non verificato — clic per ricontrollare",
+        "icon": "$(circle-outline)"
+      },
+      {
+        "command": "remoteSync.fileStatus.error",
+        "title": "Remote Sync: Controllo server non riuscito — clic per ricontrollare",
+        "icon": "$(circle-slash)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "remoteSync",
+          "title": "Remote Sync",
+          "icon": "resources/remote-sync.svg"
+        }
+      ]
+    },
+    "views": {
+      "remoteSync": [
+        {
+          "id": "remoteSync.connectionsView",
+          "name": "Connections",
+          "contextualTitle": "Remote Sync Connections"
+        }
+      ],
+      "explorer": [
+        {
+          "id": "remoteSync.status",
+          "name": "Remote Sync",
+          "contextualTitle": "Current Remote Connection",
+          "when": "remoteSync.active"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "remoteSync.connectionsView",
+        "contents": "Manage FTP, FTPS and SFTP connections.\n[Add Connection](command:remoteSync.add)",
+        "when": "!remoteSync.hasConnections"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "remoteSync.openInBrowser",
+          "when": "remoteSync.active && resourceScheme == file",
+          "group": "navigation@2"
+        },
+        {
+          "command": "remoteSync.splitPhpHtml",
+          "when": "resourceScheme == file && (resourceExtname == .php || resourceExtname == .phtml || resourceExtname == .html || resourceExtname == .htm || editorLangId == php)",
+          "group": "navigation@1"
+        },
+        {
+          "command": "remoteSync.fileStatus.synced",
+          "when": "remoteSync.active && remoteSync.fileState == synced && resourceScheme == file",
+          "group": "navigation@0"
+        },
+        {
+          "command": "remoteSync.fileStatus.local",
+          "when": "remoteSync.active && remoteSync.fileState == local && resourceScheme == file",
+          "group": "navigation@0"
+        },
+        {
+          "command": "remoteSync.fileStatus.remote",
+          "when": "remoteSync.active && remoteSync.fileState == remote && resourceScheme == file",
+          "group": "navigation@0"
+        },
+        {
+          "command": "remoteSync.fileStatus.conflict",
+          "when": "remoteSync.active && remoteSync.fileState == conflict && resourceScheme == file",
+          "group": "navigation@0"
+        },
+        {
+          "command": "remoteSync.fileStatus.different",
+          "when": "remoteSync.active && remoteSync.fileState == different && resourceScheme == file",
+          "group": "navigation@0"
+        },
+        {
+          "command": "remoteSync.fileStatus.checking",
+          "when": "remoteSync.active && remoteSync.fileState == checking && resourceScheme == file",
+          "group": "navigation@0"
+        },
+        {
+          "command": "remoteSync.fileStatus.unknown",
+          "when": "remoteSync.active && remoteSync.fileState == unknown && resourceScheme == file",
+          "group": "navigation@0"
+        },
+        {
+          "command": "remoteSync.fileStatus.error",
+          "when": "remoteSync.active && remoteSync.fileState == error && resourceScheme == file",
+          "group": "navigation@0"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "remoteSync.sync",
+          "when": "view == remoteSync.status && remoteSync.active",
+          "group": "navigation"
+        },
+        {
+          "command": "remoteSync.pause",
+          "when": "view == remoteSync.status && remoteSync.active",
+          "group": "navigation"
+        },
+        {
+          "command": "remoteSync.settings",
+          "when": "view == remoteSync.status && remoteSync.active",
+          "group": "navigation"
+        },
+        {
+          "command": "remoteSync.add",
+          "when": "view == remoteSync.connectionsView",
+          "group": "navigation"
+        },
+        {
+          "command": "remoteSync.refreshConnections",
+          "when": "view == remoteSync.connectionsView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "remoteSync.open",
+          "when": "view == remoteSync.connectionsView && viewItem == remoteSync.connection",
+          "group": "inline@0"
+        },
+        {
+          "command": "remoteSync.test",
+          "when": "view == remoteSync.connectionsView && viewItem == remoteSync.connection",
+          "group": "inline@1"
+        },
+        {
+          "command": "remoteSync.edit",
+          "when": "view == remoteSync.connectionsView && viewItem == remoteSync.connection",
+          "group": "inline@2"
+        },
+        {
+          "command": "remoteSync.remove",
+          "when": "view == remoteSync.connectionsView && viewItem == remoteSync.connection",
+          "group": "remoteSync"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "remoteSync.download",
+          "when": "remoteSync.active && resourceScheme == file",
+          "group": "remoteSync"
+        },
+        {
+          "command": "remoteSync.recursive",
+          "when": "remoteSync.active && resourceScheme == file",
+          "group": "remoteSync"
+        },
+        {
+          "command": "remoteSync.compare",
+          "when": "remoteSync.active && resourceScheme == file",
+          "group": "remoteSync"
+        },
+        {
+          "command": "remoteSync.resolve",
+          "when": "remoteSync.active && resourceScheme == file",
+          "group": "remoteSync"
+        },
+        {
+          "command": "remoteSync.history",
+          "when": "remoteSync.active && resourceScheme == file",
+          "group": "remoteSync"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "remoteSync.fileStatus.synced",
+          "when": "false"
+        },
+        {
+          "command": "remoteSync.fileStatus.local",
+          "when": "false"
+        },
+        {
+          "command": "remoteSync.fileStatus.remote",
+          "when": "false"
+        },
+        {
+          "command": "remoteSync.fileStatus.conflict",
+          "when": "false"
+        },
+        {
+          "command": "remoteSync.fileStatus.different",
+          "when": "false"
+        },
+        {
+          "command": "remoteSync.fileStatus.checking",
+          "when": "false"
+        },
+        {
+          "command": "remoteSync.fileStatus.unknown",
+          "when": "false"
+        },
+        {
+          "command": "remoteSync.fileStatus.error",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Remote Sync Workspace",
+      "properties": {
+        "remoteSync.activeFileCheckSeconds": {
+          "type": "number",
+          "default": 15,
+          "description": "Read-only content check interval for the active remote-workspace file, independent of synchronization. Does not upload, delete or replace workspace files.",
+          "scope": "machine",
+          "minimum": 5,
+          "maximum": 300
+        },
+        "remoteSync.autoUpload": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically publish saved local changes.",
+          "scope": "machine"
+        },
+        "remoteSync.remotePollingMinutes": {
+          "type": "number",
+          "default": 10,
+          "description": "Remote reconciliation interval; 0 disables polling.",
+          "scope": "machine",
+          "enum": [
+            0,
+            5,
+            10,
+            15,
+            30
+          ]
+        },
+        "remoteSync.lazyLoading": {
+          "type": "boolean",
+          "default": true,
+          "description": "Materialize only root files initially. Use the Explorer context command to load directories.",
+          "scope": "machine"
+        },
+        "remoteSync.confirmRename": {
+          "type": "boolean",
+          "default": false,
+          "description": "Confirm propagation of renames.",
+          "scope": "machine"
+        },
+        "remoteSync.confirmMassDelete": {
+          "type": "boolean",
+          "default": true,
+          "description": "Confirm remote directory removal and batches of file deletions.",
+          "scope": "machine"
+        },
+        "remoteSync.retryAttempts": {
+          "type": "number",
+          "default": 3,
+          "description": "Bounded connection attempts and explicitly requested safe retries.",
+          "scope": "machine",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "remoteSync.showDecorations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show synchronization badges in the native Explorer.",
+          "scope": "machine"
+        },
+        "remoteSync.logLevel": {
+          "type": "string",
+          "default": "info",
+          "description": "Output verbosity.",
+          "scope": "machine",
+          "enum": [
+            "info",
+            "debug",
+            "error"
+          ]
+        },
+        "remoteSync.excludes": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/.git/**"
+          ],
+          "description": "Excluded relative paths (glob patterns).",
+          "scope": "machine",
+          "items": {
+            "type": "string"
+          }
+        },
+        "remoteSync.timeout": {
+          "type": "number",
+          "default": 30000,
+          "description": "Protocol connection/operation timeout in milliseconds.",
+          "scope": "machine",
+          "minimum": 1000,
+          "maximum": 300000
+        }
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/veetaw/remote-sync-workspace.git"
+  },
+  "homepage": "https://github.com/veetaw/remote-sync-workspace#readme",
+  "bugs": {
+    "url": "https://github.com/veetaw/remote-sync-workspace/issues"
+  }
+}

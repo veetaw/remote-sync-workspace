@@ -1,0 +1,31 @@
+name: Bug report
+description: Report a reproducible problem.
+body:
+  - type: markdown
+    attributes:
+      value: 'Remove credentials, private keys, server details, and project content before submitting. Report security vulnerabilities privately; see SECURITY.md.'
+  - type: input
+    id: versions
+    attributes:
+      label: Environment
+      description: Extension version, VS Code version, operating system, and protocol.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Use a minimal example with a disposable server if possible.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Redacted diagnostics
+      description: Optional logs or operation status, with sensitive details removed.

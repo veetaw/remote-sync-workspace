@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.vsix
+*.zip
+*.sha256
+.research/
+.vscode-test/
+coverage/
+test-results/
+*.log
+test-results-audit.json
+.env
+.env.*
+!.env.example
