@@ -29,7 +29,7 @@ p.scripts = {
   'test:php': 'npm run build && node scripts/test-extension.cjs --php',
   'test:vsix': 'node scripts/test-extension.cjs --vsix',
   lint: 'eslint src test',
-  format: 'prettier --write src test docs *.md *.json',
+  format: 'prettier --write src test *.md *.json',
   check: 'npm run build && npm run lint && npm test',
   package: 'vsce package --no-dependencies',
   'vscode:prepublish': 'npm run build && node scripts/notices.cjs',
@@ -223,20 +223,20 @@ for (const [name, [type, value, description]] of Object.entries(settings))
     ...(name === 'logLevel' ? { enum: ['info', 'debug', 'error'] } : {}),
   };
 const indicators = {
-  synced: ['Allineato all’ultimo controllo', 'circle-filled'],
-  local: ['Modifiche locali', 'circle-filled'],
-  remote: ['Modifiche sul server', 'circle-filled'],
-  conflict: ['Locale e server divergenti', 'warning'],
-  different: ['Locale e server differenti', 'circle-filled'],
-  checking: ['Controllo server in corso', 'sync~spin'],
-  unknown: ['Server non verificato', 'circle-outline'],
-  error: ['Controllo server non riuscito', 'circle-slash'],
+  synced: ['Synchronized at last check', 'circle-filled'],
+  local: ['Local changes', 'circle-filled'],
+  remote: ['Remote changes', 'circle-filled'],
+  conflict: ['Local and remote conflict', 'warning'],
+  different: ['Local and remote differ', 'circle-filled'],
+  checking: ['Checking server', 'sync~spin'],
+  unknown: ['Server not checked', 'circle-outline'],
+  error: ['Server check failed', 'circle-slash'],
 };
 for (const [state, [label, icon]] of Object.entries(indicators)) {
   const command = `remoteSync.fileStatus.${state}`;
   p.contributes.commands.push({
     command,
-    title: `Remote Sync: ${label} — clic per ricontrollare`,
+    title: `Remote Sync: ${label} — click to check again`,
     icon: `$(${icon})`,
   });
   p.contributes.menus['editor/title'].push({

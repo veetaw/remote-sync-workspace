@@ -51,6 +51,14 @@ Expanding a folder in the native Explorer cannot trigger a download through VS C
 
 ## Synchronization
 
+### Open the published file in your browser
+
+The **Open Published File in Browser** globe button in the editor title maps the current file to your website URL and opens it in the system's default browser. Configure **Website URL** and **Web document root** in the connection's expanded Server section, or run **Configure Website URL / Web Root**. The first browser click also offers this setup if no website URL has been configured.
+
+For example, with URL `https://example.com/app/` and the project root as web root, `pages/contact.php` opens `https://example.com/app/pages/contact.php`. If only the project's `public` folder is exposed, set the web root to `public`: `public/index.php` then maps to the URL base's `index.php`. Files outside the configured web root are blocked. File names are URL-encoded; only HTTP/HTTPS website URLs without embedded credentials are accepted.
+
+This opens the **published server version**. The command does not save dirty buffers, upload local changes, or start a PHP server. For applications with custom routing, a physical file path may not correspond to an application route. The browser decides whether to use a new tab or window. This mode does not select or reuse a particular Chrome tab and does not install a Chrome companion extension.
+
 ### Current-file indicator and PHP / HTML split
 
 The active remote-workspace file has an indicator in the editor title and a colored dot with a label in the status bar. It distinguishes matching content at the last check, local changes (including unsaved edits), remote changes, diverging local/remote content, checking, and a failed check. The tooltip includes the last content-check time. An unreachable server is not shown as synchronized.
@@ -92,12 +100,6 @@ Three-way merges use `git merge-file --diff3` for text files up to 16 MiB per ve
 
 When recovery is needed, pause uploads, inspect diagnostics and the server, reconnect, run **Sync Now**, and resolve uncertain files explicitly. Do not delete extension metadata to unblock the queue.
 
-## Active file status and PHP/HTML views
-
-The active file indicator shows its last checked synchronization status. Remote inspections are separate from publication; periodic checks use bandwidth and may wait behind the connection queue. The indicator describes the last observation, not a continuous guarantee.
-
-Use **Remote Sync: Split PHP / HTML in the Same File** to view one document in two editor groups, including unsaved changes. One view starts at PHP and the other navigates to detected HTML outside PHP strings, comments, and heredocs. Existing split groups are reused.
-
 ## History and settings
 
 Use **View History / Restore Version** to inspect, compare, or restore a file revision. For a deleted file, run the command without an active file and enter its relative path. A deletion commit contains no file bytes; select an earlier revision. Restoring creates a new local change that follows the normal synchronization queue.
@@ -110,13 +112,12 @@ Changing the host, port, protocol, username, remote root, or local directory cre
 
 State, content blobs, and Git history live under `ExtensionContext.globalStorageUri/state/<UUID>/`; default workspaces live under `globalStorageUri/workspaces/<UUID>/`. `.git`, `.remote-sync*`, `[DIR] *`, common temporary files, and configured exclusions are not uploaded. History is not automatically pruned. Plan for disk usage and independent backups; project secrets can remain in local history as ordinary file content.
 
-## Contribute and publish
+## Contributing
 
 - [Development](DEVELOPMENT.md)
-- [Testing](TESTING.md) and [historical test report](docs/TEST-REPORT.md)
+- [Testing](TESTING.md)
 - [Architecture](ARCHITECTURE.md)
 - [Contributing](CONTRIBUTING.md) and [support](SUPPORT.md)
-- [GitHub setup, packaging, and Marketplace publishing](PUBLISHING.md)
 - [Changelog](CHANGELOG.md)
 
 ## License

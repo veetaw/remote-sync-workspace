@@ -55,11 +55,3 @@ The Activity Bar container uses `resources/remote-sync.svg` and lists all connec
 Three-way merging uses Git CLI and a reviewable candidate rather than private Merge Editor commands. Read-only comparison content uses private blobs whose hashes are checked before use.
 
 Active-file inspection reads remote content separately from publication. Its indicator describes the last checked state and can wait behind the serial queue. PHP/HTML split views share one document, including unsaved changes; HTML navigation skips PHP strings, comments, and heredocs, and existing split groups are reused.
-
-## Preliminary research
-
-The implementation's original research examined [FTP-Simple](https://github.com/humy2833/FTP-Simple) at commit `0e1948ebd885c5e70a4e4818f4857ff739238f17`, including extension.js, package.json, and lib utilities. Code was read in a research clone and was not copied into this product.
-
-Research covered empty-file and `[DIR]` placeholder behavior, limited-depth loading, timer refresh, EasyFTP session reuse, coupled editor/watcher handling, callback errors without authoritative inventories, prefix-based paths, optional remote backups, and locally encrypted configuration. This project uses real files, persistent verified baselines, and SecretStorage; it does not import FTP-Simple credentials.
-
-Original official references included [VS Code API](https://code.visualstudio.com/api/references/vscode-api), [vscode.d.ts](https://github.com/microsoft/vscode/blob/main/src/vscode-dts/vscode.d.ts), [Tree View API](https://code.visualstudio.com/api/extension-guides/tree-view), [public commands](https://code.visualstudio.com/api/references/commands), [Extension Host testing](https://code.visualstudio.com/api/working-with-extensions/testing-extension), [basic-ftp](https://github.com/patrickjuchli/basic-ftp), and [ssh2-sftp-client](https://github.com/theophilusx/ssh2-sftp-client). No private VS Code API or patch is used.

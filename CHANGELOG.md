@@ -1,15 +1,8 @@
 # Changelog
 
-## Unreleased
-
-- Prepare English project documentation, GitHub metadata, contribution guidelines, and Marketplace publishing instructions.
-- Generate third-party notices during the VS Code prepublish step.
-- Preserve the configured version and publisher when regenerating manifest contributions.
-- Discover the packaged extension using its configured publisher in VSIX integration tests.
-- Add a manually triggered Marketplace publishing workflow using OIDC Trusted Publishing.
-
 ## 0.1.2 — 2026-11-24
 
+- Add a browser button with per-connection website URL and optional web document root; open the published file through the default browser without saving or uploading.
 - Show active-file synchronization status with read-only remote inspection.
 - Add PHP/HTML split views of the same document, including unsaved content and existing-group reuse.
 - Extend engine and Extension Host checks for inspection and editor navigation.

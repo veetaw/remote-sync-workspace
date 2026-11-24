@@ -19,8 +19,6 @@ Open the project in VS Code and press **F5**. The build task runs before the Ext
 
 `package.json` is the manifest. `scripts/configure.cjs` regenerates contributions and scripts; run it only when intentionally changing those contributions. It preserves the current version and publisher. Settings are machine-scoped: a synchronized repository cannot choose the publishing host or inject connection secrets through versioned settings.
 
-The repository URL is configured for `veetaw/remote-sync-workspace`. The local publisher `remote-sync-local` must be replaced by a registered publisher before publishing. See [PUBLISHING.md](PUBLISHING.md).
-
 ## VS Code and PHP tests
 
 `npm run test:extension` uses `@vscode/test-electron`, an installed Windows VS Code when available, or an isolated download. Set `VSCODE_EXECUTABLE` to select another executable. Temporary user profiles and extension directories are removed afterward; the normal user profile is not modified.
@@ -29,7 +27,7 @@ After packaging, `npm run test:vsix` installs and tests the generated VSIX in an
 
 `npm run test:php` requires an installed VS Code, network access, and installs Intelephense only in the temporary profile. It checks cross-file completion using materialized PHP files. On Linux without a display, use `xvfb-run -a npm run test:extension`.
 
-The tests use public APIs and a configuration-seeding API available only in `ExtensionMode.Test`, followed by real commands, WorkspaceEdit, and normal save events. JSON reports are written under `test-results/`. See [TESTING.md](TESTING.md) and the [historical report](docs/TEST-REPORT.md). Loopback credentials have no validity outside the test fixtures.
+The tests use public APIs and a configuration-seeding API available only in `ExtensionMode.Test`, followed by real commands, WorkspaceEdit, and normal save events. JSON reports are written under `test-results/`. See [TESTING.md](TESTING.md). Loopback credentials have no validity outside the test fixtures.
 
 ## Synchronization and recovery invariants
 

@@ -41,4 +41,4 @@ Git uses an explicit index and work-tree separate from the user's repository. Th
 
 For UNCERTAIN operations, inspect the server, use Sync Now, and choose an explicit resolution. Do not remove state or blindly repeat destructive actions. Abandoning an operation does not undo effects or declare success. Preserve the UUID, workspace, and state before removing a connection when recovery is needed.
 
-Historical dependency audit results are recorded in [docs/TEST-REPORT.md](docs/TEST-REPORT.md); rerun audits to assess current dependencies. Test servers and fixture keys are excluded from the VSIX.
+Run `npm audit --omit=dev` to check current runtime dependency advisories. Test servers and fixture keys are excluded from the VSIX.

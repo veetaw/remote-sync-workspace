@@ -10,7 +10,7 @@
     "test:php": "npm run build && node scripts/test-extension.cjs --php",
     "test:vsix": "node scripts/test-extension.cjs --vsix",
     "lint": "eslint src test",
-    "format": "prettier --write src test docs *.md *.json",
+    "format": "prettier --write src test *.md *.json",
     "check": "npm run build && npm run lint && npm test",
     "package": "vsce package --no-dependencies",
     "vscode:prepublish": "npm run build && node scripts/notices.cjs"
@@ -49,7 +49,7 @@
     "vitest": "^5.1.1"
   },
   "displayName": "Remote Sync Workspace",
-  "publisher": "remote-sync-local",
+  "publisher": "veetaw",
   "engines": {
     "vscode": "^1.110.0",
     "node": ">=22"
@@ -186,42 +186,42 @@
       },
       {
         "command": "remoteSync.fileStatus.synced",
-        "title": "Remote Sync: Allineato all’ultimo controllo — clic per ricontrollare",
+        "title": "Remote Sync: Synchronized at last check — click to check again",
         "icon": "$(circle-filled)"
       },
       {
         "command": "remoteSync.fileStatus.local",
-        "title": "Remote Sync: Modifiche locali — clic per ricontrollare",
+        "title": "Remote Sync: Local changes — click to check again",
         "icon": "$(circle-filled)"
       },
       {
         "command": "remoteSync.fileStatus.remote",
-        "title": "Remote Sync: Modifiche sul server — clic per ricontrollare",
+        "title": "Remote Sync: Remote changes — click to check again",
         "icon": "$(circle-filled)"
       },
       {
         "command": "remoteSync.fileStatus.conflict",
-        "title": "Remote Sync: Locale e server divergenti — clic per ricontrollare",
+        "title": "Remote Sync: Local and remote conflict — click to check again",
         "icon": "$(warning)"
       },
       {
         "command": "remoteSync.fileStatus.different",
-        "title": "Remote Sync: Locale e server differenti — clic per ricontrollare",
+        "title": "Remote Sync: Local and remote differ — click to check again",
         "icon": "$(circle-filled)"
       },
       {
         "command": "remoteSync.fileStatus.checking",
-        "title": "Remote Sync: Controllo server in corso — clic per ricontrollare",
+        "title": "Remote Sync: Checking server — click to check again",
         "icon": "$(sync~spin)"
       },
       {
         "command": "remoteSync.fileStatus.unknown",
-        "title": "Remote Sync: Server non verificato — clic per ricontrollare",
+        "title": "Remote Sync: Server not checked — click to check again",
         "icon": "$(circle-outline)"
       },
       {
         "command": "remoteSync.fileStatus.error",
-        "title": "Remote Sync: Controllo server non riuscito — clic per ricontrollare",
+        "title": "Remote Sync: Server check failed — click to check again",
         "icon": "$(circle-slash)"
       }
     ],

@@ -8,9 +8,9 @@ export async function configureBrowser(
   save: (c: Connection) => Promise<void>,
 ): Promise<boolean> {
   const base = await vscode.window.showInputBox({
-    title: `Browser — ${connection.name}: dominio / URL base`,
+    title: `Browser — ${connection.name}: domain / base URL`,
     prompt:
-      'Esempio: https://example.com/ oppure https://example.com/app/. Vuoto disabilita il collegamento.',
+      'Example: https://example.com/ or https://example.com/app/. Leave empty to disable browser links.',
     value: connection.webBaseUrl ?? '',
     ignoreFocusOut: true,
     validateInput: (value) => {
@@ -18,23 +18,23 @@ export async function configureBrowser(
       try {
         browserBaseUrl(value.trim());
       } catch {
-        return 'URL HTTP/HTTPS completo, senza credenziali, query o frammenti.';
+        return 'Use a complete HTTP/HTTPS URL without credentials, a query, or a fragment.';
       }
     },
   });
   if (base === undefined) return false;
   const webRoot = base.trim()
     ? await vscode.window.showInputBox({
-        title: 'Cartella web relativa al workspace',
+        title: 'Web document root relative to the workspace',
         prompt:
-          'Vuoto: root del progetto. Per esempio public se il sito espone soltanto la cartella public.',
+          'Leave empty for the project root. Use public if the website serves only that directory.',
         value: connection.webRoot ?? '',
         ignoreFocusOut: true,
         validateInput: (value) => {
           try {
             relativePath(value.trim(), true);
           } catch {
-            return 'Percorso relativo con /, senza traversal; per esempio public.';
+            return 'Use a relative path with / and no traversal, for example public.';
           }
         },
       })

@@ -20,7 +20,7 @@ export class ActiveFileIndicator implements vscode.Disposable {
   private disposed = false;
   state = 'none';
   constructor(private engine: () => SyncEngine | undefined) {
-    this.item.name = 'Remote Sync — file corrente';
+    this.item.name = 'Remote Sync — current file';
     this.item.command = 'remoteSync.checkActiveFile';
     this.subscriptions.push(
       vscode.window.onDidChangeActiveTextEditor(() => this.refresh(true)),
@@ -182,41 +182,31 @@ export class ActiveFileIndicator implements vscode.Disposable {
             ? 'checking'
             : 'unknown';
     const labels: Record<string, [string, string, string]> = {
-      synced: ['circle-filled', 'Allineato', 'testing.iconPassed'],
+      synced: ['circle-filled', 'Synchronized', 'testing.iconPassed'],
       local: [
         'circle-filled',
-        target.document.isDirty
-          ? 'Modifiche locali non salvate'
-          : 'Modifiche locali',
+        target.document.isDirty ? 'Unsaved local changes' : 'Local changes',
         'editorWarning.foreground',
       ],
-      remote: [
-        'circle-filled',
-        'Modifiche sul server',
-        'editorInfo.foreground',
-      ],
-      conflict: ['warning', 'Locale e server divergenti', 'errorForeground'],
+      remote: ['circle-filled', 'Remote changes', 'editorInfo.foreground'],
+      conflict: ['warning', 'Local and remote conflict', 'errorForeground'],
       different: [
         'circle-filled',
-        'Locale e server differenti',
+        'Local and remote differ',
         'editorWarning.foreground',
       ],
-      checking: ['sync~spin', 'Controllo server…', 'descriptionForeground'],
+      checking: ['sync~spin', 'Checking server…', 'descriptionForeground'],
       unknown: [
         'circle-outline',
-        'Server non verificato',
+        'Server not checked',
         'descriptionForeground',
       ],
-      error: [
-        'circle-slash',
-        'Controllo server non riuscito',
-        'errorForeground',
-      ],
+      error: ['circle-slash', 'Server check failed', 'errorForeground'],
     };
     const [icon, label, color] = labels[this.state];
     this.item.text = `$(${icon}) ${label}`;
     this.item.color = new vscode.ThemeColor(color);
-    this.item.tooltip = `${target.path}\n${label}${this.busy ? '\nVerifica in corso…' : ''}\n${this.result ? `Ultimo controllo contenuto: ${new Date(this.result.checkedAt).toLocaleString()}` : 'Nessuna verifica del contenuto remoto disponibile.'}\n${this.result?.remote === null ? 'File assente sul server.\n' : ''}Clic per controllare adesso. Il controllo non pubblica né sostituisce file.`;
+    this.item.tooltip = `${target.path}\n${label}${this.busy ? '\nChecking…' : ''}\n${this.result ? `Last content check: ${new Date(this.result.checkedAt).toLocaleString()}` : 'No remote content check available.'}\n${this.result?.remote === null ? 'File missing on server.\n' : ''}Click to check now. Checking does not upload or replace files.`;
     this.item.accessibilityInformation = {
       label: `Remote Sync, ${label}, ${target.path}`,
     };

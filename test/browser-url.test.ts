@@ -37,5 +37,5 @@ it.each(['../outside.php', '/outside.php', 'public/../outside.php'])(
 it('does not expose a file outside the configured web document root', () => {
   expect(() =>
     browserFileUrl('https://example.com/', 'public', 'config/secret.php'),
-  ).toThrow('fuori');
+  ).toThrow('outside the configured web document root');
 });

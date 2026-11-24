@@ -21,3 +21,7 @@ vitest.config.mts
 .gitignore
 *.zip
 *.sha256
+
+.private/**
+PUBLISHING.md
+docs/TEST-REPORT.md

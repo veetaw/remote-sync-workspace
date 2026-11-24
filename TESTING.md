@@ -40,5 +40,3 @@ Independent-client race windows, physical power loss, proprietary servers, and e
 `test/helpers.ts` implements a disk remote with failConnect, failList, failDownload, failUpload, corruptUpload, and duringUpload. Tests check bytes and persisted state rather than mock calls alone. Errors after partial remote writes must remain UNCERTAIN; later synchronization can verify the outcome or report a conflict.
 
 Use disposable accounts and roots for additional tests. Do not introduce tests that delete data on external hosts. Test TLS certificates are explicitly trusted fixtures for those tests only; production TLS keeps certificate validation enabled.
-
-See [docs/TEST-REPORT.md](docs/TEST-REPORT.md) for historical versions, results, and limitations.

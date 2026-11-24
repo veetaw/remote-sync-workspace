@@ -325,8 +325,14 @@ export async function activate(
   register('browserSettings', async (id) => {
     const c = await chosenConnection(id);
     if (!c) return;
-    if (await configureBrowser(c, (next) => connections.save(next)))
+    if (await configureBrowser(c, (next) => connections.save(next))) {
+      if (engine?.config.id === c.id)
+        Object.assign(engine.config, {
+          webBaseUrl: c.webBaseUrl,
+          webRoot: c.webRoot,
+        });
       view.update();
+    }
   });
   register('openInBrowser', async (uri) => {
     const current = active();
@@ -358,12 +364,12 @@ export async function activate(
       ['local', 'conflict'].includes(fileIndicator.state)
     )
       void vscode.window.showInformationMessage(
-        'Apro la versione pubblicata sul server. Le modifiche locali non vengono salvate o caricate dal pulsante browser.',
+        'Opening the published server version. The browser button does not save or upload local changes.',
       );
     if (!(await openBrowserUrl(url)))
       throw new SyncError(
         'SAFETY',
-        'Il sistema non è riuscito ad aprire il browser predefinito.',
+        'The system could not open the default browser.',
       );
   });
   register('edit', async (id) => {

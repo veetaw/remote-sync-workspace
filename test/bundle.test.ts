@@ -20,7 +20,7 @@ it('bundled SFTP runtime works without optional native accelerators', async () =
       target: 'node22',
       format: 'cjs',
       outfile: bundle,
-      external: ['cpu-features'],
+      external: ['cpu-features', '*.node'],
     });
     const module = (await import(
       pathToFileURL(bundle).href

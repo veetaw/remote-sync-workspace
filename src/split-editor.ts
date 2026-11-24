@@ -38,6 +38,6 @@ export async function splitPhpHtml(uri?: vscode.Uri): Promise<void> {
   );
   if (offset === undefined)
     void vscode.window.showInformationMessage(
-      'Remote Sync: nessun tag <html> trovato; aperta una seconda vista del documento alla posizione corrente.',
+      'Remote Sync: no <html> tag found; opened a second view at the current position.',
     );
 }

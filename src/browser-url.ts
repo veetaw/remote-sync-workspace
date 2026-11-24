@@ -8,7 +8,7 @@ export function browserBaseUrl(value: string): URL {
   } catch {
     throw new SyncError(
       'SAFETY',
-      'Inserisci un URL completo, per esempio https://example.com/',
+      'Enter a complete URL, for example https://example.com/',
     );
   }
   if (
@@ -21,7 +21,7 @@ export function browserBaseUrl(value: string): URL {
   )
     throw new SyncError(
       'SAFETY',
-      'L’URL base deve usare HTTP/HTTPS, senza credenziali, query o frammenti.',
+      'The base URL must use HTTP/HTTPS without credentials, a query, or a fragment.',
     );
   if (!base.pathname.endsWith('/')) base.pathname += '/';
   return base;
@@ -37,7 +37,7 @@ export function browserFileUrl(
   if (webRoot && !file.startsWith(`${webRoot}/`))
     throw new SyncError(
       'SAFETY',
-      'Questo file è fuori dalla cartella web configurata.',
+      'This file is outside the configured web document root.',
     );
   const relative = webRoot ? file.slice(webRoot.length + 1) : file;
   // Encode each filename component, so #, %, spaces and Unicode remain part of the path.

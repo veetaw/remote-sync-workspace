@@ -12,3 +12,7 @@ test-results-audit.json
 .env
 .env.*
 !.env.example
+
+.private/**
+PUBLISHING.md
+docs/TEST-REPORT.md
